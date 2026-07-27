@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simon Says | Test Your Memory</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="preloader" id="preloader">
+        <div class="loader-ring">
+            <span></span><span></span><span></span><span></span>
+        </div>
+    </div>
+
+    <header class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#top" class="logo">
+                <span class="logo-dot dot-red"></span>
+                <span class="logo-dot dot-green"></span>
+                <span class="logo-dot dot-blue"></span>
+                <span class="logo-dot dot-yellow"></span>
+                Simon<span class="logo-accent">Says</span>
+            </a>
+
+            <nav class="nav-links" id="navLinks">
+                <a href="#top">Home</a>
+                <a href="#how-to-play">How to Play</a>
+                <a href="#about">About</a>
+            </nav>
+
+            <a href="game.html" class="btn btn-primary nav-cta">Start Game</a>
+
+            <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <section class="hero" id="top">
+
+        <div class="floating-shapes">
+            <span class="shape shape-1"></span>
+            <span class="shape shape-2"></span>
+            <span class="shape shape-3"></span>
+            <span class="shape shape-4"></span>
+        </div>
+
+        <div class="hero-container">
+            <div class="hero-text">
+                <p class="eyebrow">A CLASSIC MEMORY CHALLENGE</p>
+                <h1 class="hero-title">
+                <span id="typedText"></span><span class="cursor">|</span>
+                </h1>
+                <p class="hero-desc">
+                Simon Says is a memory game where the board flashes an ever-growing
+                sequence of colours. Watch closely, repeat it back, and see how many
+                rounds your memory can survive before one wrong click ends the run.
+                </p>
+                <div class="hero-buttons">
+                <a href="game.html" class="btn btn-glow">▶ Start Game</a>
+                <a href="#how-to-play" class="btn btn-outline">How to Play</a>
+                </div>
+            </div>
+
+            <div class="hero-illustration">
+                <div class="simon-ring">
+                <div class="pad pad-red"></div>
+                <div class="pad pad-green"></div>
+                <div class="pad pad-blue"></div>
+                <div class="pad pad-yellow"></div>
+                <div class="ring-center">SIMON</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <script src="js/main.js"></script>
+</body>
+</html>
