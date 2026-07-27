@@ -16,4 +16,17 @@ document.addEventListener("DOMContentLoaded", ()=>{
         link.addEventListener("click", () => navLinks.classList.remove("open"));
     });
 
+    const typedTextEl = document.getElementById("typedText");
+    const fullText = "Test Your Memory with Simon Says!";
+    let charIndex = 0;
+
+    function typeWriter() {
+        if (charIndex < fullText.length) {
+        typedTextEl.textContent += fullText.charAt(charIndex);
+        charIndex++;
+        setTimeout(typeWriter, 55);
+        }
+    }
+    setTimeout(typeWriter, 500);
+
 });
