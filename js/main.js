@@ -29,4 +29,21 @@ document.addEventListener("DOMContentLoaded", ()=>{
     }
     setTimeout(typeWriter, 500);
 
+    const revealEls = document.querySelectorAll(".reveal");
+    const revealObserver = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                revealObserver.unobserve(entry.target); // animate only once
+                }
+            });
+        },
+        { threshold: 0.15 }
+    );
+
+  revealEls.forEach((el) => revealObserver.observe(el));
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+
 });
