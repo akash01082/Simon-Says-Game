@@ -1,9 +1,21 @@
+(function redirectHomeOnReload() {
+    const navEntries = performance.getEntriesByType("navigation");
+    const navType = navEntries.length
+        ? navEntries[0].type
+        : (performance.navigation && performance.navigation.type === 1 ? "reload" : "navigate");
+
+    if (navType === "reload") {
+        window.location.replace("index.html");
+    }
+})();
+
 document.addEventListener("DOMContentLoaded", ()=>{
 
     const pads = document.querySelectorAll(".pad-btn");
     const startBtn = document.getElementById("startBtn");
     const restartBtn = document.getElementById("restartBtn");
     const modalRestartBtn = document.getElementById("modalRestartBtn");
+    const exitBtn = document.getElementById("exitBtn");
     const levelValueEl = document.getElementById("levelValue");
     const scoreValueEl = document.getElementById("scoreValue");
     const highScoreValueEl = document.getElementById("highScoreValue");
@@ -14,6 +26,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     const finalScoreEl = document.getElementById("finalScore");
     const finalHighScoreEl = document.getElementById("finalHighScore");
     const confettiCanvas = document.getElementById("confettiCanvas");
+    const timerRingProgress = document.getElementById("timerRingProgress");
 
     const COLORS = ["red", "green", "blue", "yellow"];
     const KEY_MAP = { r: "red", g: "green", b: "blue", y: "yellow" };
@@ -82,6 +95,65 @@ document.addEventListener("DOMContentLoaded", ()=>{
     }
 
 
+    const TIMER_RADIUS = 54;
+    const TIMER_CIRCUMFERENCE = 2 * Math.PI * TIMER_RADIUS; // ~339.29
+
+    let timerRAF = null;
+    let timerStartedAt = 0;
+    let timerDurationMs = 0;
+
+    function getTurnDuration() {
+        // Gives a little more time as the sequence grows longer.
+        return Math.max(4000, 3000 + sequence.length * 1200);
+    }
+
+    function resetTimerRing() {
+        timerRingProgress.style.stroke = "var(--accent)";
+        timerRingProgress.style.strokeDashoffset = "0";
+    }
+
+    function stopTurnTimer() {
+        if (timerRAF) cancelAnimationFrame(timerRAF);
+        timerRAF = null;
+        resetTimerRing();
+    }
+
+    function startTurnTimer(durationMs) {
+        stopTurnTimer();
+        timerDurationMs = durationMs;
+        timerStartedAt = performance.now();
+        timerRAF = requestAnimationFrame(tickTurnTimer);
+    }
+
+    function tickTurnTimer(now) {
+        const elapsed = now - timerStartedAt;
+        const elapsedFraction = Math.min(elapsed / timerDurationMs, 1);
+        const remainingFraction = 1 - elapsedFraction;
+
+        timerRingProgress.style.strokeDashoffset = String(TIMER_CIRCUMFERENCE * elapsedFraction);
+
+        if (remainingFraction > 0.5) {
+        timerRingProgress.style.stroke = "var(--accent)";   // green
+        } else if (remainingFraction > 0.2) {
+        timerRingProgress.style.stroke = "var(--warning)";  // yellow
+        } else {
+        timerRingProgress.style.stroke = "var(--danger)";   // red
+        }
+
+        if (elapsedFraction >= 1) {
+        timerRAF = null;
+        onTurnTimeExpired();
+        return;
+        }
+        timerRAF = requestAnimationFrame(tickTurnTimer);
+    }
+
+    function onTurnTimeExpired() {
+        if (!gameActive || isPlayingSequence) return;
+        endGame("Time ran out!");
+    }
+
+
     function startGame() {
         if (audioCtx.state === "suspended") audioCtx.resume();
         sequence = [];
@@ -91,6 +163,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
         gameActive = true;
         updateStatsUI();
         hideGameOverModal();
+        stopTurnTimer();
         startBtn.disabled = true;
         nextRound();
     }
@@ -101,6 +174,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
         levelValueEl.textContent = level;
         centerText.textContent = "Watch...";
         statusText.textContent = `Level ${level} — watch the sequence`;
+        stopTurnTimer();
         playSequence();
     }
 
@@ -118,6 +192,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
         setPadsEnabled(true);
         centerText.textContent = "Your Turn";
         statusText.textContent = "Your turn — repeat the sequence";
+        startTurnTimer(getTurnDuration());
     }
 
     function setPadsEnabled(enabled) {
@@ -144,23 +219,43 @@ document.addEventListener("DOMContentLoaded", ()=>{
             level++;
             updateStatsUI();
 
+            stopTurnTimer();
+            setPadsEnabled(false);
 
             if ((level - 1) % 10 === 0 && level > 1) {
             launchConfetti();
             }
 
-            statusText.textContent = "Correct! Get ready for the next round...";
-            setTimeout(nextRound, 900);
+            startNextLevelCountdown();
         }
         } else {
         endGame();
         }
     }
 
+    function startNextLevelCountdown() {
+        let count = 3;
+        centerText.textContent = String(count);
+        statusText.textContent = "Level complete! Get ready...";
 
-    function endGame() {
+        const countdownInterval = setInterval(() => {
+        count--;
+        if (count > 0) {
+            centerText.textContent = String(count);
+        } else {
+            clearInterval(countdownInterval);
+            centerText.textContent = "Go!";
+            statusText.textContent = `Level ${level} incoming...`;
+            setTimeout(nextRound, 500);
+        }
+        }, 1000);
+    }
+
+
+    function endGame(reason) {
         gameActive = false;
         setPadsEnabled(false);
+        stopTurnTimer();
         playErrorTone();
         triggerRedFlash();
 
@@ -171,7 +266,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
         highScoreValueEl.textContent = highScore;
 
         centerText.textContent = "Game Over";
-        statusText.textContent = "One wrong click ended the run!";
+        statusText.textContent = reason || "One wrong click ended the run!";
         startBtn.disabled = false;
 
         setTimeout(showGameOverModal, 500);
@@ -199,6 +294,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
         score = 0;
         gameActive = false;
         isPlayingSequence = false;
+        stopTurnTimer();
         updateStatsUI();
         centerText.textContent = "Press Start";
         statusText.textContent = 'Press "Start Game" to begin';
@@ -278,11 +374,14 @@ document.addEventListener("DOMContentLoaded", ()=>{
         hideGameOverModal();
         startGame();
     });
-
+    exitBtn.addEventListener("click", () => {
+        window.location.href = "index.html";
+    });
     document.addEventListener("keydown", (e) => {
         const color = KEY_MAP[e.key.toLowerCase()];
         if (color) handlePlayerInput(color);
     });
 
     setPadsEnabled(false);
+    resetTimerRing();
 });

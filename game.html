@@ -42,6 +42,10 @@
                     <button class="pad-btn pad-yellow" data-color="yellow" aria-label="Yellow pad"></button>
 
                     <div class="board-center" id="boardCenter">
+                        <svg class="timer-ring" id="timerRing" viewBox="0 0 120 120" aria-hidden="true">
+                            <circle class="timer-ring-bg" cx="60" cy="60" r="54"></circle>
+                            <circle class="timer-ring-progress" id="timerRingProgress" cx="60" cy="60" r="54"></circle>
+                        </svg>
                         <span id="centerText">Press Start</span>
                     </div>
                 </div>
@@ -64,7 +68,10 @@
                 <p class="modal-line">Your Score: <span id="finalScore">0</span></p>
                 <p class="modal-line">Highest Score: <span id="finalHighScore">0</span></p>
                 <p class="modal-sub">Press Restart to Play Again</p>
-                <button class="btn btn-glow" id="modalRestartBtn">↻ Restart</button>
+                <div class="modal-actions">
+                    <button class="btn btn-glow" id="modalRestartBtn">↻ Restart</button>
+                    <button class="btn btn-outline btn-exit" id="exitBtn">🚪 Exit Game</button>
+                </div>
             </div>
         </div>
     </div>
