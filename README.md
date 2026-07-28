@@ -79,8 +79,8 @@ Simon-Says-Game/
 
 **Akash Kundu**
 
-- GitHub: https://github.com/akash01082
-- LinkedIn: https://www.linkedin.com/in/akash-kundu03
+**[GitHub](https://github.com/akash01082)**
+**[LinkedIn](https://www.linkedin.com/in/akash-kundu03)**
 
 ---
 
