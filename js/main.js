@@ -1,8 +1,14 @@
+if ("scrollRestoration" in history) {
+    history.scrollRestoration = "manual";
+}
+window.scrollTo(0, 0);
+
 document.addEventListener("DOMContentLoaded", ()=>{
-    
+    window.scrollTo(0, 0);
     window.addEventListener("load", ()=>{
         const preloader = document.getElementById("preloader");
         setTimeout(() => preloader.classList.add("hidden"), 400);
+        window.scrollTo(0, 0);
     });
 
     const hamburger = document.getElementById("hamburger");
