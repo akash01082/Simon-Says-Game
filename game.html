@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Play | Simon Says</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/game.css" />
+</head>
+<body>
+    <div class="flash-overlay" id="flashOverlay"></div>
+    <canvas id="confettiCanvas"></canvas>
+    <div class="game-page">
+        
+        <header class="game-header">
+            <a href="index.html" class="mini-logo">Simon<span>Says</span></a>
+            <h1>Simon Says Game</h1>
+            <div class="stats-bar">
+                <div class="stat-pill">
+                    <span class="stat-label">Level</span>
+                    <span class="stat-value" id="levelValue">1</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="stat-label">Score</span>
+                    <span class="stat-value" id="scoreValue">0</span>
+                </div>
+                <div class="stat-pill highest">
+                    <span class="stat-label">Highest Score</span>
+                    <span class="stat-value" id="highScoreValue">0</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="game-arena">
+            <div class="board-wrapper">
+                <div class="simon-board" id="simonBoard">
+                    <button class="pad-btn pad-red"    data-color="red"    aria-label="Red pad"></button>
+                    <button class="pad-btn pad-green"  data-color="green"  aria-label="Green pad"></button>
+                    <button class="pad-btn pad-blue"   data-color="blue"   aria-label="Blue pad"></button>
+                    <button class="pad-btn pad-yellow" data-color="yellow" aria-label="Yellow pad"></button>
+
+                    <div class="board-center" id="boardCenter">
+                        <span id="centerText">Press Start</span>
+                    </div>
+                </div>
+            </div>
+
+            <p class="status-text" id="statusText">Press "Start Game" to begin</p>
+
+            <div class="controls">
+                <button class="btn btn-glow" id="startBtn">▶ Start Game</button>
+                <button class="btn btn-outline" id="restartBtn">↻ Restart</button>
+                <a href="index.html" class="btn btn-outline">🏠 Back to Home</a>
+            </div>
+
+            <p class="keyboard-hint">Tip: you can also play using keys <b>R</b> <b>G</b> <b>B</b> <b>Y</b></p>
+        </main>
+
+        <div class="modal-overlay" id="gameOverModal">
+            <div class="glass-card modal-card">
+                <h2 class="modal-title">Game Over!</h2>
+                <p class="modal-line">Your Score: <span id="finalScore">0</span></p>
+                <p class="modal-line">Highest Score: <span id="finalHighScore">0</span></p>
+                <p class="modal-sub">Press Restart to Play Again</p>
+                <button class="btn btn-glow" id="modalRestartBtn">↻ Restart</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
