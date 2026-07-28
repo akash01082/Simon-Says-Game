@@ -81,4 +81,131 @@ document.addEventListener("DOMContentLoaded", ()=>{
         return COLORS[Math.floor(Math.random() * COLORS.length)];
     }
 
+
+    function startGame() {
+        if (audioCtx.state === "suspended") audioCtx.resume();
+        sequence = [];
+        level = 1;
+        score = 0;
+        playerStep = 0;
+        gameActive = true;
+        updateStatsUI();
+        hideGameOverModal();
+        startBtn.disabled = true;
+        nextRound();
+    }
+
+    function nextRound() {
+        playerStep = 0;
+        sequence.push(randomColor());
+        levelValueEl.textContent = level;
+        centerText.textContent = "Watch...";
+        statusText.textContent = `Level ${level} — watch the sequence`;
+        playSequence();
+    }
+
+    async function playSequence() {
+        isPlayingSequence = true;
+        setPadsEnabled(false);
+
+        await wait(500);
+        for (const color of sequence) {
+        await flashPad(color);
+        await wait(180);
+        }
+
+        isPlayingSequence = false;
+        setPadsEnabled(true);
+        centerText.textContent = "Your Turn";
+        statusText.textContent = "Your turn — repeat the sequence";
+    }
+
+    function setPadsEnabled(enabled) {
+        pads.forEach((pad) => (pad.disabled = !enabled));
+    }
+
+    function wait(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    function handlePlayerInput(color) {
+        if (!gameActive || isPlayingSequence) return;
+
+        flashPad(color, 220);
+
+        const expectedColor = sequence[playerStep];
+
+        if (color === expectedColor) {
+        playerStep++;
+
+
+        if (playerStep === sequence.length) {
+            score++;          
+            level++;
+            updateStatsUI();
+
+
+            if ((level - 1) % 10 === 0 && level > 1) {
+            launchConfetti();
+            }
+
+            statusText.textContent = "Correct! Get ready for the next round...";
+            setTimeout(nextRound, 900);
+        }
+        } else {
+        endGame();
+        }
+    }
+
+
+    function endGame() {
+        gameActive = false;
+        setPadsEnabled(false);
+        playErrorTone();
+        triggerRedFlash();
+
+        if (score > highScore) {
+        highScore = score;
+        localStorage.setItem("simonHighScore", String(highScore));
+        }
+        highScoreValueEl.textContent = highScore;
+
+        centerText.textContent = "Game Over";
+        statusText.textContent = "One wrong click ended the run!";
+        startBtn.disabled = false;
+
+        setTimeout(showGameOverModal, 500);
+    }
+
+    function triggerRedFlash() {
+        flashOverlay.classList.add("active");
+        setTimeout(() => flashOverlay.classList.remove("active"), 250);
+    }
+
+    function showGameOverModal() {
+        finalScoreEl.textContent = score;
+        finalHighScoreEl.textContent = highScore;
+        gameOverModal.classList.add("show");
+    }
+
+    function hideGameOverModal() {
+        gameOverModal.classList.remove("show");
+    }
+
+    function resetBoard() {
+        sequence = [];
+        playerStep = 0;
+        level = 1;
+        score = 0;
+        gameActive = false;
+        isPlayingSequence = false;
+        updateStatsUI();
+        centerText.textContent = "Press Start";
+        statusText.textContent = 'Press "Start Game" to begin';
+        setPadsEnabled(false);
+        startBtn.disabled = false;
+        hideGameOverModal();
+    }
+
+
 });
