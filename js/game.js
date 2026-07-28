@@ -207,5 +207,82 @@ document.addEventListener("DOMContentLoaded", ()=>{
         hideGameOverModal();
     }
 
+    const ctx = confettiCanvas.getContext("2d");
+    let confettiParticles = [];
+    let confettiAnimId = null;
 
+    function resizeCanvas() {
+        confettiCanvas.width = window.innerWidth;
+        confettiCanvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    function launchConfetti() {
+        const colors = ["#ef4444", "#22c55e", "#3b82f6", "#facc15", "#ffffff"];
+        confettiParticles = Array.from({ length: 120 }, () => ({
+        x: Math.random() * confettiCanvas.width,
+        y: -20,
+        size: 4 + Math.random() * 6,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        speedY: 2 + Math.random() * 3,
+        speedX: -2 + Math.random() * 4,
+        rotation: Math.random() * 360,
+        rotationSpeed: -6 + Math.random() * 12,
+        }));
+
+        if (!confettiAnimId) animateConfetti();
+        setTimeout(() => {
+        confettiParticles = [];
+        }, 2500);
+    }
+
+    function animateConfetti() {
+        ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+        confettiParticles.forEach((p) => {
+        p.y += p.speedY;
+        p.x += p.speedX;
+        p.rotation += p.rotationSpeed;
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rotation * Math.PI) / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+        ctx.restore();
+        });
+
+        confettiParticles = confettiParticles.filter((p) => p.y < confettiCanvas.height + 20);
+
+        confettiAnimId = requestAnimationFrame(animateConfetti);
+
+        if (confettiParticles.length === 0) {
+        cancelAnimationFrame(confettiAnimId);
+        confettiAnimId = null;
+        ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        }
+    }
+
+
+    pads.forEach((pad) => {
+        pad.addEventListener("click", () => handlePlayerInput(pad.dataset.color));
+    });
+
+    startBtn.addEventListener("click", startGame);
+    restartBtn.addEventListener("click", () => {
+        resetBoard();
+        startGame();
+    });
+    modalRestartBtn.addEventListener("click", () => {
+        hideGameOverModal();
+        startGame();
+    });
+
+    document.addEventListener("keydown", (e) => {
+        const color = KEY_MAP[e.key.toLowerCase()];
+        if (color) handlePlayerInput(color);
+    });
+
+    setPadsEnabled(false);
 });
