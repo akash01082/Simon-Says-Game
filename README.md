@@ -46,15 +46,19 @@ A modern and interactive **Simon Says Memory Game** built using **HTML, CSS, and
 
 ```
 Simon-Says-Game/
-│── index.html
-│── game.html
-|──css
-|   │── style.css
-|   │── game.css
-|──js
-|   │── main.js
-|   │── game.js
-│── README.md
+│
+├── index.html      
+├── game.html          
+│
+├── css/
+│   ├── style.css      
+│   └── game.css          
+│
+├── js/
+│   ├── main.js           
+│   └── game.js            
+│
+└── README.md
 ```
 
 ---
@@ -63,7 +67,7 @@ Simon-Says-Game/
 
 - Multiple difficulty levels
 - Sound on/off toggle
-- Timer mode
+- login page
 - Online leaderboard
 - Multiplayer mode
 
