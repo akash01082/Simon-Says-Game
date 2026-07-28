@@ -222,3 +222,43 @@ body {
   padding: 1px 6px;
   border-radius: 4px;
 }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 8, 16, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.modal-overlay.show { opacity: 1; visibility: visible; }
+
+.modal-card {
+  padding: 40px 36px;
+  text-align: center;
+  max-width: 340px;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+.modal-overlay.show .modal-card { transform: scale(1); }
+
+.modal-title {
+  font-family: var(--font-heading);
+  color: var(--danger);
+  font-size: 1.7rem;
+  margin-bottom: 18px;
+}
+.modal-line { margin-bottom: 6px; font-size: 1rem; }
+.modal-line span { font-weight: 700; color: var(--primary); }
+.modal-sub { color: var(--text-muted); font-size: 0.85rem; margin: 14px 0 20px; }
+
+
+@media (max-width: 480px) {
+  .stat-pill { min-width: 84px; padding: 8px 14px; }
+  .controls { flex-direction: column; width: 100%; }
+  .controls .btn, .controls a { width: 100%; }
+}
