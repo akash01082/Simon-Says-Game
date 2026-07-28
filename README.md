@@ -2,9 +2,7 @@
 
 A modern and interactive **Simon Says Memory Game** built using **HTML, CSS, and JavaScript**. Test your memory by repeating an ever-growing sequence of colors. The game becomes more challenging with every level!
 
-## 🚀 Live Demo
-
-🔗 **Play Now:** https://akash01082.github.io/Simon-Says-Game/
+🚀 **[Live Demo](https://akash01082.github.io/Simon-Says-Game/)**
 
 ---
 
