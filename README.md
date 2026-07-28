@@ -4,7 +4,7 @@ A modern and interactive **Simon Says Memory Game** built using **HTML, CSS, and
 
 ## 🚀 Live Demo
 
-<!-- 🔗 **Play Now:** https://yourusername.github.io/your-repository-name/ -->
+🔗 **Play Now:** https://akash01082.github.io/Simon-Says-Game/
 
 ---
 
